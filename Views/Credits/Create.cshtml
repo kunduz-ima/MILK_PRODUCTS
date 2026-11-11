@@ -1,0 +1,51 @@
+﻿@model MILK_PRODUCTS.Models.Credit
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Создание кредита</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CreditSum" class="control-label">Сумма кредита</label>
+                <input asp-for="CreditSum" class="form-control" />
+                <span asp-validation-for="CreditSum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataOfReceive" class="control-label">Дата получения</label>
+                <input asp-for="DataOfReceive" class="form-control" />
+                <span asp-validation-for="DataOfReceive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Years" class="control-label">Срок (лет)</label>
+                <input asp-for="Years" class="form-control" />
+                <span asp-validation-for="Years" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnnualPercent" class="control-label">Годовая процентная ставка</label>
+                <input asp-for="AnnualPercent" class="form-control" />
+                <span asp-validation-for="AnnualPercent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Penalty" class="control-label">Пеня (% в день)</label>
+                <input asp-for="Penalty" class="form-control" />
+                <span asp-validation-for="Penalty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,29 @@
+﻿@model MILK_PRODUCTS.Models.Payment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Добавить новый платёж</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="Create" method="post">
+    <input type="hidden" name="creditId" value="@ViewBag.CreditId" />
+
+    <div class="form-group">
+        <label for="paymentDate">Выберите дату платежа:</label>
+        <input type="date" id="paymentDate" name="paymentDate" class="form-control"
+               value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-success">Отправить платеж</button>
+        <a asp-action="Payments" asp-route-creditId="@ViewBag.CreditId" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>

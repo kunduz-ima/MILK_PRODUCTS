@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.Payment>
+
+@{
+    ViewData["Title"] = "График платежей";
+}
+
+<h1>@ViewBag.CreditInfo</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h2>График платежей</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Часть долга</th>
+            <th>Проценты</th>
+            <th>Всего</th>
+            <th>Просрочка (дни)</th>
+            <th>Пеня</th>
+            <th>Итого</th>
+            <th>Остаток</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model)
+        {
+            <tr>
+                <td>@payment.PaymentDate?.ToString("yyyy-MM-dd")</td>
+                <td>@payment.PartOfCreditSum?.ToString("N2")</td>
+                <td>@payment.PercentageSum?.ToString("N2")</td>
+                <td>@payment.TotalSum?.ToString("N2")</td>
+                <td>@payment.OverdueDays</td>
+                <td>@payment.PenaltySum?.ToString("N2")</td>
+                <td>@payment.Total?.ToString("N2")</td>
+                <td>@payment.ReamainSum?.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mt-3">
+    <a asp-action="Create" asp-route-creditId="@ViewBag.CreditId" class="btn btn-primary">Добавить новый платёж</a>
+    <a asp-action="Index" class="btn btn-secondary">Назад к списку кредитов</a>
+</div>

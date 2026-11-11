@@ -1,0 +1,120 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.Salaries>
+
+@{
+    ViewData["Title"] = "Зарплата сотрудников";
+    var selectedYear = ViewBag.SelectedYear as int?;
+    var selectedMonth = ViewBag.SelectedMonth as int?;
+    var years = ViewBag.Years as List<int>;
+    var months = ViewBag.Months as List<int>;
+    var monthNames = ViewBag.MonthNames as string[];
+    var hasData = ViewBag.HasData as bool? ?? false;
+    var totalAmount = ViewBag.TotalAmount as decimal?;
+}
+
+<h1>Зарплата сотрудников</h1>
+<h2>Зарплаты за @monthNames[selectedMonth.Value] @selectedYear</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <label for="year" class="mr-2">Год:</label>
+                <select name="year" class="form-control" asp-items="@(new SelectList(years, selectedYear))">
+                </select>
+            </div>
+            <div class="form-group mr-2">
+                <label for="month" class="mr-2">Месяц:</label>
+                <select name="month" class="form-control">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" selected="@(i == selectedMonth)">@ViewBag.MonthNames[i]</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Показать</button>
+        </form>
+    </div>
+    <div class="col-md-8 text-right">
+        @if (hasData && Model.Any(s => s.Status != "Выдано"))
+        {
+            <a asp-action="Pay" asp-route-year="@selectedYear" asp-route-month="@selectedMonth"
+               class="btn btn-success">Выплатить</a>
+        }
+        <!-- Кнопка экспорта -->
+        <form asp-action="Export" method="post" class="d-inline ms-2">
+            <input type="hidden" name="year" value="@selectedYear" />
+            <input type="hidden" name="month" value="@selectedMonth" />
+            <button type="submit" class="btn btn-secondary">
+                <i class="bi bi-download"></i> Отчёт
+            </button>
+            <select name="exportType" class="form-select d-inline-block w-auto">
+                <option value="excel">Excel</option>
+                <option value="word">Word</option>
+                <option value="pdf">PDF</option>
+            </select>
+        </form>
+    </div>
+   
+</div>
+
+@if (!hasData)
+{
+    <p>Нет данных за выбранный месяц.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Сотрудник</th>
+                <th>Оклад</th>
+                <th>Учас. в произ.</th>
+                <th>Учас. в закуп.</th>
+                <th>Учас. в прод.</th>
+                <th>Бонус</th>
+                <th>Итог</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EmployeeNavigation?.Fullname</td>
+                    <td>@item.EmployeeNavigation?.Salary</td>
+                    <td>@item.ParticipationProduction</td>
+                    <td>@item.ParticipationPurchase</td>
+                    <td>@item.ParticipationSale</td>
+                    <td>@item.Bonus?.ToString("0.00")</td>
+                    <td>@item.TotalAmount?.ToString("0.00")</td>
+                    <td>@item.Status</td>
+                    <td>
+                        @if (item.Status != "Выдано")
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-right">
+        <strong>Общая сумма: @totalAmount?.ToString("0.00")</strong>
+    </div>
+}

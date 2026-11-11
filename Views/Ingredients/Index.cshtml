@@ -1,0 +1,115 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.Ingredient>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Ингредиенты</h3>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary" id="createNewButton">Create New</a>
+</p>
+<div class="form-group">
+<label for="ProductSelect">Выберите продукт:</label>
+<select id="ProductSelect" class="form-control" style="width: 200px; margin: 0 auto; display: inline-block;">
+<option value="">-- Выберите продукт --</option>
+        @foreach (var product in ViewBag.Products)
+        {
+          <option value="@product.Id" 
+                selected="@(ViewBag.SelectedProductId != null && ViewBag.SelectedProductId == product.Id ? "selected" : null)">
+                @product.Name
+        </option>
+        }
+</select>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Сырье</th>
+            <th>Количество</th>
+        </tr>
+    </thead>
+    <tbody id="ingredientsTable">
+       
+
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#ProductSelect').change(function () {
+                    var productId = $(this).val();
+
+                    if (productId) {
+                        $.ajax({
+                            url: '@Url.Action("GetIngredientsByProduct", "Ingredients")',
+                            type: 'GET',
+                            data: { productId: productId },
+                            success: function (data) {
+                                $('#ingredientsTable').empty();
+                                $.each(data, function (index, item) {
+                                    $('#ingredientsTable').append(
+                                        '<tr>' +
+                                            '<td>' + item.rawMaterialName + '</td>' +
+                                            '<td>' + item.countIngredients + '</td>' +
+                                            '<td>' +
+                                                '<a href="/Ingredients/Edit/' + item.id + '" class="btn btn-primary">Edit</a> | ' +
+                                                '<a href="/Ingredients/Delete/' + item.id + '" class="btn btn-danger">Delete</a>' +
+                                            '</td>' +
+                                        '</tr>'
+                                    );
+                                });
+                            },
+                            error: function () {
+                                alert('Ошибка загрузки данных');
+                            }
+                        });
+                    } else {
+                        $('#ingredientsTable').empty(); // Очистка таблицы, если ничего не выбрано
+                    }
+                });
+
+                var productId = '@ViewBag.SelectedProductId';
+                if (productId) {
+                         // Automatically fetch ingredients for the selected product on page load
+                    $.ajax({
+                        url: '@Url.Action("GetIngredientsByProduct", "Ingredients")',
+                        type: 'GET',
+                        data: { productId: productId },
+                        success: function (data) {
+                            $('#ingredientsTable').empty();
+                            $.each(data, function (index, item) {
+                                $('#ingredientsTable').append(
+                                    '<tr>' +
+                                        '<td>' + item.rawMaterialName + '</td>' +
+                                        '<td>' + item.countIngredients + '</td>' +
+                                        '<td>' +
+                                            '<a href="/Ingredients/Edit/' + item.id + '" class="btn btn-primary">Edit</a> | ' +
+                                            '<a href="/Ingredients/Delete/' + item.id + '" class="btn btn-danger">Delete</a>' +
+                                        '</td>' +
+                                    '</tr>'
+                                );
+                            });
+                        },
+                        error: function () {
+                            alert('Ошибка загрузки данных');
+                        }
+                    });
+                } 
+
+                    
+
+            $('#createNewButton').click(function (event) {
+                console.log("Selected Product ID: " + productId); // Log the selected Product ID
+                event.preventDefault(); // Prevent any default action
+                var productId = $('#ProductSelect').val(); // Get the selected product ID
+                var url = '@Url.Action("Create", "Ingredients")?productId=' + productId; // Absolute URL
+                console.log("Redirecting to: " + url); // Log the URL
+                window.location.href = url; // Redirect
+            });
+        });
+    </script>
+}

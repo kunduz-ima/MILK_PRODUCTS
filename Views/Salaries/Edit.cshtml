@@ -1,0 +1,71 @@
+﻿@model MILK_PRODUCTS.Models.Salaries
+
+@{
+    ViewData["Title"] = "Редактировать зарплату";
+}
+
+<h1>Редактировать зарплату</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label class="control-label">Сотрудник:</label>
+                <input class="form-control" value="@Model.EmployeeNavigation?.Fullname" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Оклад:</label>
+                <input class="form-control" value="@Model.EmployeeNavigation?.Salary" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Учас. в производ.:</label>
+                <input class="form-control" value="@Model.ParticipationProduction" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Учас. в закуп.:</label>
+                <input class="form-control" value="@Model.ParticipationPurchase" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Учас. в продаже:</label>
+                <input class="form-control" value="@Model.ParticipationSale" readonly />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Бонус:</label>
+                <input class="form-control" value="@Model.Bonus?.ToString("0.00")" readonly />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TotalAmount" class="control-label">Итоговая сумма:</label>
+                <input asp-for="TotalAmount" class="form-control" />
+                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <a asp-action="Index" asp-route-year="@Model.Year" asp-route-month="@Model.Month" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

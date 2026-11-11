@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.PurchaseOfRawMaterial>
+
+@{
+    ViewData["Title"] = "Закупка Сырья";
+}
+
+<h1>Закупка Сырья</h1>
+
+<!-- Форма фильтрации по датам -->
+<form asp-action="Index" method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="startDate" class="form-label">Начальная дата</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" value="@ViewBag.StartDate" />
+    </div>
+    <div class="col-md-3">
+        <label for="endDate" class="form-label">Конечная дата</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" value="@ViewBag.EndDate" />
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Фильтр</button>
+    </div>
+</form>
+
+<!-- Кнопки Create и Export -->
+<div class="mb-4">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create New
+    </a>
+
+    @if (Model.Any())
+    {
+        <form asp-action="Export" method="post" class="d-inline ms-2">
+            <input type="hidden" name="startDate" value="@ViewBag.StartDate" />
+            <input type="hidden" name="endDate" value="@ViewBag.EndDate" />
+            <button type="submit" class="btn btn-secondary">
+                <i class="bi bi-download"></i> Экспорт
+            </button>
+            <select name="exportType" class="form-select d-inline-block w-auto">
+                <option value="excel">Excel</option>
+                <option value="word">Word</option>
+                <option value="pdf">PDF</option>
+            </select>
+        </form>
+    }
+</div>
+
+<!-- Таблица с данными -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.RawMaterialsNavigation)</th>
+            <th>@Html.DisplayNameFor(model => model.CountPurchase)</th>
+            <th>@Html.DisplayNameFor(model => model.Sum)</th>
+            <th>@Html.DisplayNameFor(model => model.Date)</th>
+            <th>@Html.DisplayNameFor(model => model.EmployeeNavigation)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.RawMaterialsNavigation.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.CountPurchase)</td>
+                <td>@Html.DisplayFor(modelItem => item.Sum)</td>
+                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmployeeNavigation.Fullname)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

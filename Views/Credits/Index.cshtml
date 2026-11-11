@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.Credit>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Управление кредитами</h1>
+
+<p>
+    <a asp-action="Create">Добавить кредит</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Сумма</th>
+            <th>Дата получения</th>
+            <th>Срок (лет)</th>
+            <th>Процент</th>
+            <th>Пеня</th>
+            <th>Статус</th>
+            <th>Дата окончания</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.CreditSum</td>
+                <td>@item.DataOfReceive?.ToString("dd-MM-yyyy")</td>
+                <td>@item.Years</td>
+                <td>@item.AnnualPercent%</td>
+                <td>@item.Penalty%</td>
+                <td>
+                    @if (item.Status == true)
+                    {
+                        <span class="badge bg-success">Closed</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">Active</span>
+                    }
+                </td>
+                <td>@item.CreditExpirationDate?.ToString("dd-MM-yyyy")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

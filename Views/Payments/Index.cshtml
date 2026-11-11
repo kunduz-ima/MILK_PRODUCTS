@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MILK_PRODUCTS.Models.Credit>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Кредитные платежи</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h2>Выберите кредит:</h2>
+
+<div class="list-group">
+    @foreach (var credit in Model)
+    {
+        <a asp-action="Payments" asp-route-creditId="@credit.Id" class="list-group-item list-group-item-action">
+            Кредит №@credit.Id
+        </a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning mt-3">
+        Нет активных кредитов
+    </div>
+}
