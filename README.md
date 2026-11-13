@@ -39,7 +39,7 @@
 
 ## 💻 Как запустить локально
 1. Клонируйте репозиторий:
-   `git clone https://github.com/ваш-username/MilkProducts.git`
+   `git clone https://github.com/kunduz-ima/MilkProducts.git`
 2. Откройте файл `MILK_PRODUCTS.sln` в Visual Studio 2022.
 3. Создайте базу данных в MS SQL Server (восстановите из бэкапа или примените скрипты).
 4. В файле `appsettings.json` укажите вашу строку подключения к локальной базе данных в разделе `ConnectionStrings`.
